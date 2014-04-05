@@ -61,6 +61,7 @@ describe('Bearer', function() {
 
       server.route([
         { method: 'POST', path: '/bearer', handler: handler, config: { auth: 'bearer' } },
+        { method: 'GET', path: '/bearer', handler: handler, config: { auth: 'bearer' } },
         { method: 'POST', path: '/bearer-base64', handler: handler, config: { auth: 'bearer-base64' } }
       ]);
 
@@ -80,6 +81,51 @@ describe('Bearer', function() {
         done();
       });
     });
+
+    it('returns a reply with query token on success auth', function(done) {
+      var request = { method: 'GET', url: 'http://example.com:8080/bearer?access_token=rpaxn39848xrunpaw3489ruxnpa98w4rxn' };
+
+      server.inject(request, function (res) {
+        assert.equal(res.statusCode, 200);
+        assert.equal(res.result, 'Success');
+        done();
+      });
+    });
+
+    it('returns a reply with query token on success auth', function(done) {
+      var request = { 
+        method: 'POST', 
+        url: 'http://example.com:8080/bearer',
+        payload: { access_token: "rpaxn39848xrunpaw3489ruxnpa98w4rxn"}          
+      };
+      server.inject(request, function (res) {   
+        assert.equal(res.statusCode, 200);
+        assert.equal(res.result, 'Success');
+        done();
+      });
+    });
+
+    it('returns a reply on failed auth with no access token', function(done) {
+      var request = { method: 'GET', url: 'http://example.com:8080/bearer' };
+
+      server.inject(request, function (res) {
+        assert.equal(res.statusCode, 401);
+        assert.equal(res.result.message, 'Missing authentication');
+        assert.equal(res.headers['www-authenticate'], 'Bearer');
+        done();
+      });
+    });
+
+    it('returns a reply on failed with invalid token', function(done) {
+      var request = { method: 'GET', url: 'http://example.com:8080/bearer?access_token=rpaxn39848xrunpaw3488w4rxn' };
+      
+      server.inject(request, function (res) {
+        assert.equal(res.statusCode, 401);
+        assert.equal(res.result.message, 'Invalid token');
+        done();
+      });
+    });
+
 
     it('returns a reply on failed auth (with no authorization header)', function (done) {
       var request = { method: 'POST', url: 'http://example.com:8080/bearer' };
