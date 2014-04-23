@@ -20,10 +20,10 @@
     "hawk": "2.x.x"
   },
   "peerDependencies": {
-    "hapi": "3.x.x"
+    "hapi": "4.x.x"
   },
   "devDependencies": {
-    "hapi": "3.x.x",
+    "hapi": "4.x.x",
     "mocha": "1.17.x",
     "istanbul": "0.2.x"
   },
