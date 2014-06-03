@@ -20,7 +20,7 @@
     "hawk": "2.x.x"
   },
   "peerDependencies": {
-    "hapi": "4.x.x"
+    "hapi": "5.x.x"
   },
   "devDependencies": {
     "hapi": "4.x.x",
